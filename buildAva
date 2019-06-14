@@ -1,0 +1,67 @@
+opt=$1
+ 
+echo ""
+echo -e "\E[31;49m""\033[5mAppliance\033[0m" 
+echo -e "\E[34;49m""\033[5m    [1].290/2900             :\033[0m" 	scons -j16 platforms=appliance2900 $opt
+echo -e "\E[34;49m""\033[5m    [2].2900 wawr_rx         :\033[0m" 	scons -j16 platforms=appliance2900_rx $opt
+echo -e "\E[34;49m""\033[5m    [3].3100B                :\033[0m" 	scons -j16 platforms=aonic $opt
+echo -e "\E[34;49m""\033[5m    [4].3100                 :\033[0m" 	scons -j16 platforms=appliance2900_64bit $opt
+echo -e "\E[34;49m""\033[5m    [5].3100 wawr_rx         :\033[0m" 	scons -j16 platforms=appliance2900_64bit_rx	$opt
+echo -e "\E[34;49m""\033[5m    [6].2700                 :\033[0m" 	scons  -j16 platforms=mv686 ethlol=userland $opt
+echo -e "\E[31;49m""\033[5mLol\033[0m" 
+echo -e "\E[34;49m""\033[5m    [7].lol - msgq           :\033[0m" 	scons -u -j16 platforms=lol ethlol=msgq $opt
+echo -e "\E[34;49m""\033[5m    [8].lol - native         :\033[0m" 	scons -u -j16 platforms=lol ethlol=native $opt
+echo -e "\E[31;49m""\033[5mSTC\033[0m" 
+echo -e "\E[34;49m""\033[5m    [9].Blink                :\033[0m" 	scons -j16 platforms=blink  $opt
+echo -e "\E[34;49m""\033[5m    [10].Prof X 1G(CPU 5001) :\033[0m" 	scons -u -j16 platforms=profx-mvl40 $opt
+echo -e "\E[34;49m""\033[5m    [11].Prof Y 1G(CPU 5002) :\033[0m" 	scons -u -j16 platforms=profx-mvl40 $opt
+echo -e "\E[34;49m""\033[5m    [12].Prof Y 10G(CPU 5003):\033[0m" scons -j16 platforms=appliance2900 $opt
+echo -e "\E[34;49m""\033[5m    [13].EDM2003 card        :\033[0m" 	scons -j16 platforms=stc-mvl40 $opt
+echo -e "\E[34;49m""\033[5m    [14].Shadowcat           :\033[0m" 	scons -j16 platforms=octeon-mvl40 $opt
+echo -e "\E[31;49m""\033[5mOthers\033[0m" 
+echo -e "\E[34;49m""\033[5m    [15].Python              :\033[0m"  	scons platforms=general-python25 $opt
+echo -e "\E[34;49m""\033[5m    [16].Virtual             :\033[0m" 	scons -u -j16 platforms=avavirtual $opt
+echo ""
+echo -en "\E[31;49m""\033[5m Pls input the platform to build[1]:\033[0m"
+
+read platform
+
+case $platform in
+        0) buildCmd="";;
+	1) buildCmd="scons -j16 platforms=appliance2900 $opt";;
+	2) buildCmd="scons -j16 platforms=appliance2900_rx $opt";;
+	3) buildCmd="scons -j16 platforms=aonic $opt";;
+	4) buildCmd="scons -j16 platforms=appliance2900_64bit $opt";;
+	5) buildCmd="scons -j16 platforms=appliance2900_64bit_rx $opt";;
+	6) buildCmd="scons  -j16 platforms=mv686 ethlol=userland $opt";;
+	7) buildCmd="scons -u -j16 platforms=lol ethlol=msgq $opt";;
+	8) buildCmd="scons -u -j16 platforms=lol ethlol=native $opt";;
+	9) buildCmd="scons -j16 platforms=blink $opt";;
+	10) buildCmd="scons -u -j16 platforms=profx-mvl40 $opt";;
+	11) buildCmd="scons -u -j16 platforms=profx-mvl40 $opt";;
+	12) buildCmd="scons -j16 platforms=appliance2900 $opt";;
+	13) buildCmd="scons -j16 platforms=stc-mvl40 $opt";;
+	14) buildCmd="scons -j16 platforms=octeon-mvl40 $opt";;
+	15) buildCmd="scons platforms=general-python25 $opt";;
+	16) buildCmd="scons -u -j16 platforms=avavirtual $opt";;
+	* ) buildCmd="scons -j16 platforms=appliance2900 $opt";;
+esac
+
+echo ""
+echo $buildCmd
+
+#init 
+
+    cd lib/lol
+    chmod 644 liblog4cplus-3.4.a
+    rm -rf liblog4cplus.a
+    cp liblog4cplus-3.4.a liblog4cplus.a
+    cd ../../wa/src 
+    rm -rf FlexLexer.h
+    cp /usr/include/FlexLexer.h FlexLexer.h
+    cd ../..
+
+
+#build
+eval $buildCmd
+
