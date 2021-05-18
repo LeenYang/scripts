@@ -1,0 +1,53 @@
+#!/bin/sh
+#Usage, gdbto <process name> <nth process in case of multiple processes with same name>
+
+if [ $# -ne 2 ]; then
+    echo "$0 <process name> <nth process in case of multiple processes with same name>"
+    exit
+fi
+
+# confirm
+function confirm_inferior
+{
+    echo Do you want to attach to process $1? [y/n]
+    read choice
+}
+
+confirm_inferior $1
+confirm=0
+
+while [ $confirm -eq 0 ]; do
+    if [ "$choice" = "y" ] || [ -z "$choice" ]; then
+        confirm=1
+        choice=y
+    elif [ "$choice" = "n" ]; then
+        confirm=1
+        choice=n
+    else
+        confirm_inferior $1
+    fi
+done
+
+if [ "$choice" = "n" ]; then
+    exit
+fi
+
+pids=(`pidof $1`)
+np=${#pids[@]}
+loop=0
+while [ $np -lt $2 ] && [ $loop -lt 360 ]; do
+    sleep 0.5
+    let "loop=loop+1"    
+    echo "Waiting $loop times for $2th $1 to start ..."
+    pids=(`pidof $1`)
+	np=${#pids[@]}
+done
+
+if [ $loop -gt 360 ]; then
+    echo Waiting for $2th process $1 timeout, exit
+    exit
+else
+    echo "gdb attaching ${pids[$np-$2]}"
+    gdb -p ${pids[$np-$2]}
+fi
+
