@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cfc-deployment
+spec:
+  selector:
+    matchLabels:
+      app: cfc
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: cfc
+    spec:
+      containers:
+      - name: cfc
+        image: liyangatplano/ldocker_78:cfc2
+#        command: ["sh", "/etc/rc3.d/S99spirent"]
+        command: ["sh", "-c"]
+        args: ["/etc/rc3.d/S99spirent; tail -f /dev/null"]
+#        entrypoint: "service ssh restart && bash"
+        ports:
+        - containerPort: 22 
