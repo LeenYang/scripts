@@ -1,0 +1,18 @@
+yocto3-perf is a linux performance profiling tool, buit with yocto3 sdk.
+it is good for performance profiling for any programe in yocto3 - linux kernel 5.8.18
+
+[How to use]
+
+# 1. generate perf.data
+yocto3-perf record <your programe>
+
+# 2. analize perf.data
+yocto3-perf report <your perf.data>
+
+# 3. Attach perf record to a running process:
+     records performance data of the processes with the process ID’s ID1 and ID2
+     for a time period of seconds seconds as dictated by using the sleep command.
+yocto3-perf record -p ID1,ID2 sleep seconds
+
+# 4. You can also configure perf to record events in specific threads
+perf record -t ID1,ID2 sleep seconds
